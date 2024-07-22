@@ -23,6 +23,12 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+// הגדרת גרסאות SDK באופן ישיר במידה ולא מוגדרים בקובץ local.properties
+def minSdkVersion = localProperties.getProperty("flutter.minSdkVersion")
+if (minSdkVersion == null) {
+    minSdkVersion = 23
+}
+
 android {
     namespace = "com.example.coffee_new_app"
     compileSdk = flutter.compileSdkVersion
@@ -38,7 +44,7 @@ android {
         applicationId = "com.example.coffee_new_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
+        minSdk = minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName

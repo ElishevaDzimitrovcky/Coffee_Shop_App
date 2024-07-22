@@ -1,19 +1,35 @@
 import 'package:coffee_new_app/components/bottom_nav_bar.dart';
 import 'package:coffee_new_app/const.dart';
 import 'package:coffee_new_app/pages/cart_page.dart';
+import 'package:coffee_new_app/pages/about_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../components/coffee_tile.dart';
-import 'about_page.dart';
+import '../Services/Email_Service.dart';
+import 'manage_page.dart';
 import 'shop_page.dart';
 
 class HomePage extends StatefulWidget {
-
+  @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  User? user;
+  EmailService emailService = EmailService();
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+  }
+
+  void _getCurrentUser() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    setState(() {
+      user = currentUser;
+    });
+  }
 
   void navigateBottomBar(int index) {
     setState(() {
@@ -26,10 +42,11 @@ class _HomePageState extends State<HomePage> {
     CartPage(),
   ];
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      bottomNavigationBar: MyBottomNavBar(onTabChange:  navigateBottomBar),
+      bottomNavigationBar: MyBottomNavBar(onTabChange: navigateBottomBar),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -77,10 +94,8 @@ class _HomePageState extends State<HomePage> {
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AboutPage())
-                    );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AboutPage()));
                   },
                   child: Padding(
                     padding: EdgeInsets.only(left: 25),
@@ -90,6 +105,25 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                // הצגת כפתור "Manager" רק אם האימייל הוא eli701128@gmail.com
+                // if (user?.email == 'eli701128@gmail.com')
+                if (emailService.email == 'eli701128@gmail.com')
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ManagerPage()));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: ListTile(
+                        leading: Icon(Icons.admin_panel_settings),
+                        title: Text("Manager"),
+                      ),
+                    ),
+                  ),
               ],
             ),
             GestureDetector(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:provider/provider.dart';
+import '../Services/Email_Service.dart';
+import '../model/coffee.dart';
 import '../model/coffee_shop.dart';
+
 
 class CreditCardPage extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class _CreditCardPageState extends State<CreditCardPage> {
   String cvvCode = '';
   bool isCvvFocused = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final EmailService emailService = EmailService();
 
   void onCreditCardModelChange(CreditCardModel model) {
     setState(() {
@@ -26,10 +30,18 @@ class _CreditCardPageState extends State<CreditCardPage> {
     });
   }
 
-  void processPayment() {
+  void processPayment() async {
     if (formKey.currentState!.validate()) {
       // ניקוי העגלה
-      Provider.of<CoffeeShop>(context, listen: false).clearCart();
+      final coffeeShop = Provider.of<CoffeeShop>(context, listen: false);
+      List<Coffee> userCart = coffeeShop.userCart;
+      coffeeShop.clearCart();
+
+      // שליחת קבלה במייל
+      final email = "eli701128@gmail.com"; // שינוי לאימייל שלך
+      String receipt = _generateReceipt(userCart);
+
+      await emailService.sendReceiptEmail(email, receipt);
 
       // הצגת אלרט של רכישה מוצלחת
       showDialog(
@@ -37,7 +49,7 @@ class _CreditCardPageState extends State<CreditCardPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Success'),
-            content: Text('Payment Successful!'),
+            content: Text('Payment Successful! A receipt has been sent to your email.'),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -51,6 +63,17 @@ class _CreditCardPageState extends State<CreditCardPage> {
         },
       );
     }
+  }
+
+  String _generateReceipt(List<Coffee> userCart) {
+    StringBuffer receipt = StringBuffer();
+    double totalPrice = 0;
+    userCart.forEach((coffee) {
+      receipt.writeln("${coffee.name} - \$${coffee.price} x ${coffee.quantity}");
+      totalPrice += coffee.price * coffee.quantity;
+    });
+    receipt.writeln("\nTotal: \$${totalPrice.toStringAsFixed(2)}");
+    return receipt.toString();
   }
 
   @override

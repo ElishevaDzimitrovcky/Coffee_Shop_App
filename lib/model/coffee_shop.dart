@@ -1,41 +1,33 @@
-import 'package:coffee_new_app/model/coffee.dart';
 import 'package:flutter/material.dart';
+import 'coffee.dart';
 
 class CoffeeShop extends ChangeNotifier {
-
   final List<Coffee> _shop = [
-
     Coffee(
       name: "Long Black",
       price: 4.10,
       imagePath: "lib/images/black.png",
     ),
-
-     Coffee(
+    Coffee(
       name: "Latte",
       price: 4.00,
       imagePath: "lib/images/latte.png",
     ),
-
-     Coffee(
+    Coffee(
       name: "Espresso",
       price: 4.40,
       imagePath: "lib/images/espresso.png",
     ),
-
-     Coffee(
+    Coffee(
       name: "Iced Coffee",
       price: 5.00,
       imagePath: "lib/images/iced_coffee.png",
     ),
   ];
 
-  List<Coffee> get coffeeShop => _shop;
-
+  List<Coffee> get coffeeShope => _shop;
   List<Coffee> _userCart = [];
-
   List<Coffee> get userCart => _userCart;
-
   void addItemToCart(Coffee coffee, int quantity) {
     coffee.quantity = quantity;
     _userCart.add(coffee);
@@ -48,8 +40,20 @@ class CoffeeShop extends ChangeNotifier {
   }
 
   void clearCart() {
-  _userCart.clear();
-  notifyListeners();
+    _userCart.clear();
+    ChangeNotifier();
   }
 
+  void addItemProduct(String name, double price, String ImageUrl) {
+    _shop.add(
+        Coffee(name: name, price: price, imagePath: 'lib/images/${ImageUrl}'));
+      notifyListeners();
+
+  }
+
+  void removeItem(Coffee coffee) {
+    _shop.remove(coffee);
+        notifyListeners();
+
+  }
 }

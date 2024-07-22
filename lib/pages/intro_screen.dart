@@ -1,9 +1,9 @@
-import 'package:coffee_new_app/const.dart';
-import 'package:coffee_new_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import '../const.dart';
+import 'home_page.dart';
 
 class IntroScreen extends StatelessWidget {
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -29,14 +29,14 @@ class IntroScreen extends StatelessWidget {
               "How do you like your coffee?",
               style: TextStyle(
                 color: Colors.brown,
-                fontSize: 16
+                fontSize: 16,
               ),
             ),
             SizedBox(height: 48),
             GestureDetector(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage())
+                MaterialPageRoute(builder: (context) => HomePage()),
               ),
               child: Container(
                 padding: EdgeInsets.all(25),

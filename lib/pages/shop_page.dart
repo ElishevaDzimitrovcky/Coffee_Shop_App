@@ -37,9 +37,9 @@ class _ShopPageState extends State<ShopPage> {
           SizedBox(height: 25),
           Expanded(
             child: ListView.builder(
-              itemCount: value.coffeeShop.length,
+              itemCount: value.coffeeShope.length,
               itemBuilder: (context, index) {
-                Coffee eachCoffee = value.coffeeShop[index];
+                Coffee eachCoffee = value.coffeeShope[index];
                 return CoffeeTile(
                   coffee: eachCoffee,
                   onPressed: () => goToCoffeePage(eachCoffee),
